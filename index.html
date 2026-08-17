@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>EMBER - Wood-Fire Kitchen &amp; Bar</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root {
+  --bg: #f4f5f7;
+  --bg2: #eceef1;
+  --surface: #ffffff;
+  --text: #16181d;
+  --text2: #5c6470;
+  --text3: #8a929e;
+  --line: #e3e5e9;
+  --accent: #e2571c;
+  --accent-strong: #c94a12;
+  --accent-soft: #fdeee3;
+  --amber: #f5a623;
+  --ok: #2e9e5b;
+  --danger: #dc2626;
+  --radius: 16px;
+  --radius-sm: 10px;
+  --shadow: 0 1px 2px rgba(20,20,20,.05), 0 4px 16px rgba(20,20,20,.06);
+  --shadow-lg: 0 8px 32px rgba(20,20,20,.12);
+}
+body.dark {
+  --bg: #141416;
+  --bg2: #1c1d20;
+  --surface: #232428;
+  --text: #f4f4f5;
+  --text2: #a9adb6;
+  --text3: #767b85;
+  --line: #33353a;
+  --accent: #ff6b33;
+  --accent-strong: #ff8355;
+  --accent-soft: #3a241a;
+  --amber: #ffb340;
+  --ok: #3dd68c;
+  --danger: #f87171;
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 16px rgba(0,0,0,.4);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,.55);
+}
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html { -webkit-text-size-adjust:100%; }
+body { font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',Roboto,sans-serif; background:var(--bg); color:var(--text); padding-bottom:96px; font-size:15px; line-height:1.45; }
+.hidden { display:none !important; }
+
+/* ===== Toasts ===== */
+#toasts { position:fixed; top:10px; left:0; right:0; z-index:300; display:flex; flex-direction:column; align-items:center; gap:8px; pointer-events:none; padding:0 16px; }
+.toast { background:var(--surface); border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow-lg); padding:10px 18px; font-size:13.5px; font-weight:700; display:flex; align-items:center; gap:9px; max-width:100%; animation:toast-in .25s ease; }
+.toast .ok { width:22px; height:22px; border-radius:50%; background:var(--ok); color:#fff; display:flex; align-items:center; justify-content:center; flex:none; }
+.toast .ok svg { width:13px; height:13px; }
+.toast.out { animation:toast-out .25s ease forwards; }
+@keyframes toast-in { from { opacity:0; transform:translateY(-14px);} to { opacity:1; transform:none;} }
+@keyframes toast-out { to { opacity:0; transform:translateY(-14px);} }
+
+/* ===== Header ===== */
+.header { padding:20px 20px 14px; }
+.brand { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+.brand .logo { width:40px; height:40px; border-radius:12px; background:linear-gradient(135deg,#ff6b33,#e2571c); display:flex; align-items:center; justify-content:center; box-shadow:0 3px 10px rgba(226,87,28,.35); }
+.brand .logo svg { width:22px; height:22px; }
+.brand .name { font-size:18px; font-weight:800; letter-spacing:-.02em; }
+.brand .name span { color:var(--accent); }
+.brand .sub { font-size:12px; color:var(--text2); font-weight:500; }
+.brand .right { margin-left:auto; display:flex; align-items:center; gap:8px; }
+.rating { display:flex; align-items:center; gap:5px; font-size:13px; font-weight:800; background:var(--surface); border:1px solid var(--line); border-radius:999px; padding:6px 12px; box-shadow:var(--shadow); }
+.rating svg { width:14px; height:14px; }
+.theme-btn { width:36px; height:36px; border-radius:50%; border:1px solid var(--line); background:var(--surface); color:var(--text2); display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:var(--shadow); }
+.theme-btn svg { width:17px; height:17px; }
+.hero { background:linear-gradient(135deg,var(--surface),var(--accent-soft)); border:1px solid var(--line); border-radius:20px; padding:18px; box-shadow:var(--shadow); }
+.hero h1 { font-size:21px; font-weight:800; letter-spacing:-.03em; line-height:1.18; margin-bottom:6px; }
+.hero p { font-size:13px; color:var(--text2); max-width:48ch; margin-bottom:14px; }
+.hero .meta { display:flex; gap:8px; flex-wrap:wrap; }
+.chip { display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600; color:var(--text2); background:var(--bg2); border-radius:999px; padding:6px 12px; }
+.chip svg { width:14px; height:14px; flex:none; }
+.chip.acc { color:var(--accent-strong); background:var(--accent-soft); }
+body.dark .chip.acc { color:var(--accent); }
+.chip.ok { color:#0d7a3f; background:#e2f5ea; }
+body.dark .chip.ok { color:#3dd68c; background:#173529; }
+
+/* ===== Tabs ===== */
+.tabs { position:sticky; top:0; z-index:50; display:flex; gap:4px; padding:8px 16px; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border-bottom:1px solid var(--line); }
+.tab { flex:1; display:flex; align-items:center; justify-content:center; gap:6px; padding:10px 6px; border-radius:12px; font-size:13px; font-weight:700; color:var(--text2); cursor:pointer; transition:background .15s,color .15s; white-space:nowrap; }
+.tab svg { width:17px; height:17px; flex:none; }
+.tab.active { background:var(--surface); color:var(--accent-strong); box-shadow:var(--shadow); }
+body.dark .tab.active { color:var(--accent); }
+
+/* ===== Sections ===== */
+.section { padding:16px; display:none; }
+.section.active { display:block; animation:fade .25s ease; }
+@keyframes fade { from { opacity:0; transform:translateY(4px);} to { opacity:1; transform:none;} }
+.cat-title { font-size:13px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--text3); margin:18px 2px 10px; }
+.cat-title:first-child { margin-top:0; }
+
+/* ===== Menu grid ===== */
+.grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.card { background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow); display:flex; flex-direction:column; cursor:pointer; }
+.card .media { position:relative; background:var(--bg2); aspect-ratio:1/1; overflow:hidden; }
+.card .media img { width:100%; height:100%; object-fit:cover; transition:transform .3s ease; }
+.card:active .media img { transform:scale(1.05); }
+.card .flags { position:absolute; top:10px; left:10px; display:flex; gap:6px; }
+.flag { font-size:10px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; padding:4px 8px; border-radius:8px; }
+.flag.hot { background:#16181d; color:#ffb340; }
+body.dark .flag.hot { background:#000; }
+.flag.chef { background:#e2571c; color:#fff; }
+body.dark .flag.chef { background:var(--accent); }
+.flag.veg { background:#2e9e5b; color:#fff; }
+.card .body { padding:12px; display:flex; flex-direction:column; flex:1; }
+.card .cat { font-size:10.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--accent); margin-bottom:4px; }
+.card h3 { font-size:13.5px; font-weight:700; letter-spacing:-.01em; line-height:1.3; margin-bottom:2px; }
+.card .desc { font-size:11.5px; color:var(--text3); margin-bottom:10px; }
+.card .bottom { margin-top:auto; display:flex; align-items:center; justify-content:space-between; }
+.price { font-size:16px; font-weight:800; letter-spacing:-.02em; }
+.price small { font-size:11px; font-weight:500; color:var(--text3); }
+
+/* ===== Product sheet ===== */
+.overlay { position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:200; animation:fade .2s ease; }
+.sheet { position:fixed; bottom:0; left:0; right:0; z-index:210; background:var(--surface); border-radius:24px 24px 0 0; max-height:92vh; overflow-y:auto; animation:sheet-up .3s cubic-bezier(.32,.72,.35,1); }
+@keyframes sheet-up { from { transform:translateY(100%);} to { transform:none;} }
+.sheet .handle { width:44px; height:5px; border-radius:3px; background:var(--line); margin:10px auto 0; }
+.sheet .grip { padding:0 20px 20px; }
+.sheet .hero-img { border-radius:18px; margin:14px 20px 0; aspect-ratio:16/10; overflow:hidden; background:var(--bg2); }
+.sheet .hero-img img { width:100%; height:100%; object-fit:cover; }
+.sheet .title { font-size:19px; font-weight:800; letter-spacing:-.02em; margin:16px 0 4px; }
+.sheet .sub { font-size:13px; color:var(--text2); margin-bottom:12px; }
+.sheet .ing { font-size:13px; color:var(--text); background:var(--bg2); border-radius:12px; padding:10px 14px; margin-bottom:16px; }
+.sheet .ing b { font-weight:700; }
+.sheet .qty-row { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+.sheet .qty-row .label { font-size:13px; font-weight:700; color:var(--text2); flex:1; }
+.qty { display:flex; align-items:center; gap:0; border:1px solid var(--line); border-radius:12px; overflow:hidden; background:var(--surface); }
+.qty button { width:40px; height:40px; border:0; background:var(--bg2); color:var(--text); font-size:18px; font-weight:700; cursor:pointer; flex:none; }
+.qty button:active { background:var(--line); }
+.qty input { width:52px; height:40px; border:0; text-align:center; font-size:15px; font-weight:700; background:var(--surface); color:var(--text); outline:none; -moz-appearance:textfield; appearance:textfield; }
+.qty input::-webkit-inner-spin-button, .qty input::-webkit-outer-spin-button { -webkit-appearance:none; margin:0; }
+.sheet .total-line { display:flex; align-items:center; justify-content:space-between; padding:12px 14px; background:var(--accent-soft); border-radius:12px; margin-bottom:16px; }
+.sheet .total-line .t { font-size:12px; font-weight:700; color:var(--accent-strong); text-transform:uppercase; letter-spacing:.05em; }
+body.dark .sheet .total-line .t { color:var(--accent); }
+.sheet .total-line .v { font-size:18px; font-weight:800; }
+
+/* ===== Buttons ===== */
+.btn-primary { width:100%; border:0; border-radius:14px; padding:15px; font-size:15px; font-weight:800; color:#fff; background:var(--accent); cursor:pointer; box-shadow:0 4px 14px rgba(226,87,28,.3); transition:transform .12s ease, background .15s; }
+.btn-primary:active { transform:scale(.98); background:var(--accent-strong); }
+body.dark .btn-primary { background:var(--accent); color:#1a1a1a; }
+body.dark .btn-primary:active { background:var(--accent-strong); }
+.btn-ghost { width:100%; border:1px solid var(--line); border-radius:14px; padding:14px; font-size:14px; font-weight:700; color:var(--text2); background:var(--surface); cursor:pointer; }
+.btn-ghost:active { background:var(--bg2); }
+
+/* ===== Surprise Plate ===== */
+.surprise { padding:2px 0 4px; }
+.surprise .intro { text-align:center; padding:6px 4px 16px; }
+.surprise .intro h2 { font-size:20px; font-weight:800; letter-spacing:-.02em; margin-bottom:6px; }
+.surprise .intro p { font-size:13px; color:var(--text2); max-width:40ch; margin:0 auto; }
+.budget-row { display:flex; gap:8px; justify-content:center; margin-bottom:16px; }
+.budget-chip { flex:1; max-width:110px; border:1.5px solid var(--line); background:var(--surface); border-radius:14px; padding:12px 8px; text-align:center; cursor:pointer; transition:border-color .15s, background .15s; }
+.budget-chip .b { display:block; font-size:16px; font-weight:800; }
+.budget-chip .l { display:block; font-size:10.5px; font-weight:600; color:var(--text3); text-transform:uppercase; letter-spacing:.05em; margin-top:2px; }
+.budget-chip.sel { border-color:var(--accent); background:var(--accent-soft); }
+.budget-chip.sel .b { color:var(--accent-strong); }
+body.dark .budget-chip.sel .b { color:var(--accent); }
+.roulette-box { position:relative; border:1px solid var(--line); border-radius:20px; background:var(--surface); box-shadow:var(--shadow); overflow:hidden; min-height:240px; display:flex; flex-direction:column; }
+.roulette-box .spin-zone { padding:22px 18px; text-align:center; }
+.roulette-box .spin-zone .dice { font-size:34px; margin-bottom:10px; display:inline-block; animation:none; }
+.roulette-box .spin-zone.spinning .dice { animation:wiggle .35s ease infinite; }
+@keyframes wiggle { 0%,100% { transform:rotate(-12deg);} 50% { transform:rotate(12deg);} }
+.roulette-box .spin-zone h3 { font-size:16px; font-weight:800; margin-bottom:6px; }
+.roulette-box .spin-zone p { font-size:12.5px; color:var(--text2); margin-bottom:16px; }
+.ticker { display:block; font-size:14px; font-weight:800; color:var(--accent-strong); background:var(--accent-soft); border-radius:12px; padding:10px 12px; min-height:42px; margin-bottom:14px; }
+body.dark .ticker { color:var(--accent); }
+.roulette-box .result { display:none; }
+.roulette-box.done .result { display:block; }
+.roulette-box.done .spin-zone { display:none; }
+.result { padding:0; }
+.result .r-img { width:100%; height:150px; object-fit:cover; display:block; }
+.result .r-body { padding:14px 16px 16px; }
+.result .r-flag { display:inline-block; font-size:10px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; background:var(--accent); color:#fff; border-radius:8px; padding:4px 9px; margin-bottom:8px; }
+body.dark .result .r-flag { color:#1a1a1a; }
+.result h3 { font-size:17px; font-weight:800; letter-spacing:-.01em; margin-bottom:3px; }
+.result .r-desc { font-size:12.5px; color:var(--text2); margin-bottom:10px; }
+.result .r-price { display:flex; align-items:baseline; gap:8px; margin-bottom:12px; }
+.result .r-price .old { font-size:14px; color:var(--text3); text-decoration:line-through; }
+.result .r-price .new { font-size:22px; font-weight:800; color:var(--accent-strong); }
+body.dark .result .r-price .new { color:var(--accent); }
+.result .r-price .off { font-size:11px; font-weight:800; color:var(--ok); background:var(--bg2); border-radius:8px; padding:3px 8px; }
+.result .btn-primary { margin-top:2px; }
+.confetti { position:absolute; inset:0; pointer-events:none; overflow:hidden; }
+.confetti i { position:absolute; top:-12px; width:8px; height:14px; border-radius:2px; opacity:0; animation:fall 1.4s ease forwards; }
+@keyframes fall { 0% { opacity:0; transform:translateY(-10px) rotate(0);} 10% { opacity:1;} 100% { opacity:0; transform:translateY(220px) rotate(340deg);} }
+
+/* ===== Info ===== */
+.info-card { background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:16px; box-shadow:var(--shadow); margin-bottom:12px; }
+.info-card h3 { font-size:15px; font-weight:800; margin-bottom:10px; }
+.info-row { display:flex; align-items:center; gap:12px; padding:9px 0; font-size:13.5px; }
+.info-row + .info-row { border-top:1px solid var(--line); }
+.info-row svg { width:18px; height:18px; flex:none; color:var(--accent); }
+.info-row b { font-weight:700; }
+.info-row .r { margin-left:auto; color:var(--text2); text-align:right; }
+.hours-row { display:flex; align-items:center; gap:12px; padding:7px 0; font-size:13.5px; }
+.hours-row .d { width:78px; font-weight:700; flex:none; }
+.hours-row .h { color:var(--text2); margin-left:auto; }
+.hours-row.today .d, .hours-row.today .h { color:var(--accent-strong); font-weight:800; }
+body.dark .hours-row.today .d, body.dark .hours-row.today .h { color:var(--accent); }
+.note { font-size:12px; color:var(--text3); text-align:center; padding:4px 10px 8px; }
+
+/* ===== Cart bar ===== */
+.cartbar { position:fixed; left:12px; right:12px; bottom:14px; z-index:150; background:var(--surface); border:1px solid var(--line); border-radius:18px; box-shadow:var(--shadow-lg); padding:10px 12px 10px 16px; display:flex; align-items:center; gap:12px; transform:translateY(80px); opacity:0; transition:transform .25s cubic-bezier(.32,.72,.35,1), opacity .2s; }
+.cartbar.show { transform:none; opacity:1; }
+.cartbar .info { flex:1; min-width:0; }
+.cartbar .count { font-size:11.5px; font-weight:700; color:var(--text3); }
+.cartbar .sum { font-size:17px; font-weight:800; letter-spacing:-.02em; }
+.cartbar .btn-primary { width:auto; padding:12px 20px; font-size:14px; border-radius:12px; box-shadow:none; }
+
+/* ===== Cart sheet ===== */
+.cart-item { display:flex; align-items:center; gap:12px; padding:12px 0; }
+.cart-item + .cart-item { border-top:1px solid var(--line); }
+.cart-item .ci-name { flex:1; min-width:0; }
+.cart-item .ci-name b { font-size:13.5px; font-weight:700; display:block; }
+.cart-item .ci-name span { font-size:12px; color:var(--text3); }
+.cart-item .ci-price { font-size:14px; font-weight:800; }
+.cart-item .qty { border-radius:10px; }
+.cart-item .qty button { width:32px; height:32px; font-size:15px; }
+.cart-item .qty input { width:38px; height:32px; font-size:13px; }
+.cart-empty { text-align:center; padding:40px 20px; color:var(--text3); }
+.cart-empty .big { font-size:40px; margin-bottom:10px; }
+.field { margin-bottom:12px; }
+.field label { display:block; font-size:12px; font-weight:700; color:var(--text2); margin-bottom:6px; }
+.field input, .field textarea { width:100%; border:1px solid var(--line); border-radius:12px; padding:12px 14px; font-size:14.5px; font-family:inherit; background:var(--surface); color:var(--text); outline:none; }
+.field input:focus, .field textarea:focus { border-color:var(--accent); }
+.field textarea { resize:vertical; min-height:60px; }
+.cart-total { display:flex; align-items:center; justify-content:space-between; padding:14px; background:var(--bg2); border-radius:12px; margin:6px 0 14px; }
+.cart-total .t { font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.05em; color:var(--text3); }
+.cart-total .v { font-size:20px; font-weight:800; }
+.send-note { font-size:12px; color:var(--text3); text-align:center; margin-top:10px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .roulette-box .spin-zone.spinning .dice { animation:none; }
+  .confetti i { animation-duration:1.4s; }
+}
+</style>
+</head>
+<body class="dark">
+
+<div id="toasts"></div>
+
+<div class="header">
+  <div class="brand">
+    <div class="logo">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M12 2c1.2 3.4-3.4 5.2-3.4 9.2 0 2.9 1.9 4.6 3.4 4.6s3.4-1.7 3.4-4.6c0-2.2-1-3.6-2.2-5C13.8 8 14 9.2 14 10.2c0 1.2-.6 1.8-1.6 2.4 0-3.4-.4-6.4-.4-10.6z" fill="#fff"/><path d="M8.6 17.4c-1.6-1-2.6-2.4-2.6-4.2 0-1 .3-2 .8-2.8-.8 1.6-1.2 3.2-.6 4.8.4 1.2 1.2 2 2.4 2.6.6.3.8 1 .6 1.6l-1.2 3.6h3.4l1.2-3.6c-.7-.9-2-1.6-4-.7z" fill="#ffd9a0" opacity=".9"/></svg>
+    </div>
+    <div>
+      <div class="name">EMBER <span>Kitchen</span></div>
+      <div class="sub">Wood-fire kitchen &amp; bar</div>
+    </div>
+    <div class="right">
+      <div class="rating">
+        <svg viewBox="0 0 24 24" fill="#f5a623"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.7-6.2 3.7 1.6-7L2 9.2l7.1-.6z"/></svg>
+        4.8
+      </div>
+      <button class="theme-btn" onclick="toggleTheme()" id="themeBtn" aria-label="Toggle theme">
+        <svg id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></svg>
+        <svg id="iconSun" class="hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="hero">
+    <h1>Fire-kissed plates, honest ingredients.</h1>
+    <p>Everything leaves our wood oven or open flame. Nothing frozen, nothing fake. Order ahead, skip the wait.</p>
+    <div class="meta">
+      <span class="chip ok"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="6"/></svg>Open now</span>
+      <span class="chip acc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2L4.1 12.5c-.4.5 0 1.2.6 1.2H11l-1.5 8 8.9-10.5c.4-.5 0-1.2-.6-1.2H12z"/></svg>Wood-fired</span>
+      <span class="chip">Dine in</span>
+      <span class="chip">Takeaway</span>
+    </div>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" data-tab="menu" onclick="showTab('menu')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 5h16M4 12h16M4 19h10"/></svg>
+    Menu
+  </div>
+  <div class="tab" data-tab="surprise" onclick="showTab('surprise')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z"/><path d="M12 7v10M7 12h10"/></svg>
+    Surprise
+  </div>
+  <div class="tab" data-tab="info" onclick="showTab('info')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 21s-7-5.3-7-11a7 7 0 0 1 14 0c0 5.7-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+    Visit
+  </div>
+</div>
+
+<!-- ================= MENU ================= -->
+<div class="section active" id="sec-menu"></div>
+
+<!-- ================= SURPRISE ================= -->
+<div class="section" id="sec-surprise">
+  <div class="surprise">
+    <div class="intro">
+      <h2>The Surprise Plate</h2>
+      <p>Pick your budget, spin the wheel, let the kitchen decide. Whatever lands is yours at 20% off tonight.</p>
+    </div>
+    <div class="budget-row" id="budgetRow">
+      <div class="budget-chip sel" data-b="15" onclick="pickBudget(15)"><span class="b">$15</span><span class="l">Snack</span></div>
+      <div class="budget-chip" data-b="25" onclick="pickBudget(25)"><span class="b">$25</span><span class="l">Main</span></div>
+      <div class="budget-chip" data-b="40" onclick="pickBudget(40)"><span class="b">$40</span><span class="l">Feast</span></div>
+    </div>
+    <div class="roulette-box" id="roulette">
+      <div class="spin-zone" id="spinZone">
+        <span class="dice">🎲</span>
+        <h3>Feeling lucky?</h3>
+        <p>The wheel is loaded with dishes in your budget range.</p>
+        <span class="ticker" id="ticker">Pick a budget and spin</span>
+        <button class="btn-primary" onclick="spinRoulette()" id="spinBtn">Spin the plate</button>
+      </div>
+      <div class="result" id="resultBox">
+        <img id="rImg" class="r-img" src="" alt="">
+        <div class="r-body">
+          <span class="r-flag">Chef's surprise</span>
+          <h3 id="rName"></h3>
+          <p class="r-desc" id="rDesc"></p>
+          <div class="r-price">
+            <span class="old" id="rOld"></span>
+            <span class="new" id="rNew"></span>
+            <span class="off">20% OFF tonight</span>
+          </div>
+          <button class="btn-primary" onclick="addSurprise()">Add to order</button>
+          <button class="btn-ghost" style="margin-top:10px" onclick="spinAgain()">Spin again</button>
+        </div>
+      </div>
+      <div class="confetti" id="confetti"></div>
+    </div>
+    <p class="note" style="margin-top:14px">Surprise price applies to your order. Tell the server it's a surprise when you arrive.</p>
+  </div>
+</div>
+
+<!-- ================= INFO ================= -->
+<div class="section" id="sec-info">
+  <div class="info-card">
+    <h3>Find us</h3>
+    <div class="info-row">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 21s-7-5.3-7-11a7 7 0 0 1 14 0c0 5.7-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+      <b>24 Canal Street</b>
+      <span class="r">Old Town</span>
+    </div>
+    <div class="info-row">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.5 2.1L8 10a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.7 2z"/></svg>
+      <b>+1 (555) 014-8237</b>
+      <span class="r">Call for orders</span>
+    </div>
+    <div class="info-row">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9l9 6 9-6"/></svg>
+      <b>hello@ember.kitchen</b>
+    </div>
+  </div>
+  <div class="info-card">
+    <h3>Hours</h3>
+    <div class="hours-row" data-day="1"><span class="d">Mon - Thu</span><span class="h">11:00 - 23:00</span></div>
+    <div class="hours-row" data-day="5"><span class="d">Fri - Sat</span><span class="h">11:00 - 01:00</span></div>
+    <div class="hours-row" data-day="0"><span class="d">Sunday</span><span class="h">12:00 - 22:00</span></div>
+  </div>
+  <button class="btn-primary" onclick="bookTable()" style="margin-bottom:12px">
+    Book a table
+  </button>
+  <p class="note">Booking opens a chat with us in Telegram, pre-filled with your request. Send it and we confirm within minutes.</p>
+</div>
+
+<!-- ================= CART BAR ================= -->
+<div class="cartbar" id="cartbar">
+  <div class="info">
+    <div class="count" id="cartCount">0 items</div>
+    <div class="sum" id="cartSum">$0</div>
+  </div>
+  <button class="btn-primary" onclick="openCart()">View order</button>
+</div>
+
+<!-- ================= OVERLAY + SHEETS ================= -->
+<div class="overlay hidden" id="overlay" onclick="closeSheets()"></div>
+
+<div class="sheet hidden" id="prodSheet">
+  <div class="handle"></div>
+  <div class="hero-img"><img id="pImg" src="" alt="" onerror="this.style.display='none'"></div>
+  <div class="grip">
+    <div class="title" id="pTitle"></div>
+    <div class="sub" id="pSub"></div>
+    <div class="ing" id="pIng"></div>
+    <div class="qty-row">
+      <span class="label">Quantity</span>
+      <div class="qty">
+        <button onclick="adjQty(-1)">−</button>
+        <input id="pQty" type="number" value="1" min="1" max="99" onchange="setQty(this.value)">
+        <button onclick="adjQty(1)">+</button>
+      </div>
+    </div>
+    <div class="total-line"><span class="t">Total</span><span class="v" id="pTotal"></span></div>
+    <button class="btn-primary" onclick="addFromSheet()">Add to order</button>
+  </div>
+</div>
+
+<div class="sheet hidden" id="cartSheet">
+  <div class="handle"></div>
+  <div class="grip">
+    <div class="title" style="margin-top:14px">Your order</div>
+    <div id="cartList"></div>
+    <div class="cart-total"><span class="t">Total</span><span class="v" id="cartTotal">$0</span></div>
+    <div class="field">
+      <label for="fName">Name</label>
+      <input id="fName" type="text" placeholder="Your name" autocomplete="name">
+    </div>
+    <div class="field">
+      <label for="fNote">Notes</label>
+      <textarea id="fNote" placeholder="Table number, allergies, pickup time"></textarea>
+    </div>
+    <button class="btn-primary" onclick="submitOrder()">Send order to Telegram</button>
+    <p class="send-note">This opens Telegram with your order pre-filled. Tap send and it reaches us instantly.</p>
+  </div>
+</div>
+
+<script>
+/* ===== Telegram webapp ===== */
+var tg = window.Telegram && window.Telegram.WebApp;
+if (tg) { tg.expand(); tg.ready(); }
+function tgHeader() {
+  if (!tg) return;
+  var dark = document.body.classList.contains('dark');
+  try { tg.setHeaderColor(dark ? '#141416' : '#e2571c'); tg.setBackgroundColor(dark ? '#141416' : '#f4f5f7'); } catch(e){}
+}
+
+/* ===== Theme ===== */
+var savedTheme = null;
+try { savedTheme = localStorage.getItem('ember_theme'); } catch(e){}
+function applyTheme(dark) {
+  document.body.classList.toggle('dark', dark);
+  document.getElementById('iconMoon').classList.toggle('hidden', dark);
+  document.getElementById('iconSun').classList.toggle('hidden', !dark);
+  tgHeader();
+}
+function systemDark() { return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches; }
+function initTheme() {
+  var dark = savedTheme ? savedTheme === 'dark' : systemDark();
+  applyTheme(dark);
+  if (window.matchMedia) window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e){
+    if (!savedTheme) applyTheme(e.matches);
+  });
+}
+function toggleTheme() {
+  savedTheme = document.body.classList.contains('dark') ? 'light' : 'dark';
+  try { localStorage.setItem('ember_theme', savedTheme); } catch(e){}
+  applyTheme(savedTheme === 'dark');
+}
+
+/* ===== Data ===== */
+var PRODUCTS = [
+  { id:'calamari', cat:'Small plates', name:'Crispy Calamari', price:12, img:'img/calamari.jpg', desc:'Fried squid, lemon aioli, chili flakes', ing:'Squid, flour, lemon aioli, chili, parsley', tags:['hot'] },
+  { id:'brie', cat:'Small plates', name:'Baked Brie & Sorrel Jam', price:14, img:'img/brie.jpg', desc:'Warm brie, sorrel jam, toasted sourdough', ing:'Brie, sorrel jam, sourdough, olive oil', tags:['chef'] },
+  { id:'soup', cat:'Small plates', name:'Creamy Tomato Soup', price:9, img:'img/soup.jpg', desc:'Basil oil, grilled cheese croutons', ing:'Tomato, cream, basil, sourdough, cheddar', tags:[] },
+  { id:'asado', cat:'Mains', name:'Argentine Asado', price:32, img:'img/asado.jpg', desc:'Wood-fire grilled beef, chimichurri, smoked salt', ing:'Beef short rib, chimichurri, smoked salt', tags:['chef','hot'] },
+  { id:'salmon', cat:'Mains', name:'Oven-Roasted Salmon', price:26, img:'img/salmon.jpg', desc:'Fennel, cherry tomatoes, lemon, dill', ing:'Salmon, fennel, cherry tomato, lemon, dill', tags:['hot'] },
+  { id:'karaage', cat:'Mains', name:'Karaage Fried Chicken', price:18, img:'img/karaage.jpg', desc:'Yuzu mayo, pickled daikon, sesame', ing:'Chicken thigh, yuzu mayo, daikon, sesame', tags:['new'] },
+  { id:'duck', cat:'Mains', name:'Duck Confit', price:28, img:'img/duck.jpg', desc:'Orange glaze, crispy potatoes, greens', ing:'Duck leg, orange glaze, potato, greens', tags:['chef'] },
+  { id:'lasagna', cat:'Mains', name:'Vegan Lasagna', price:19, img:'img/lasagna.jpg', desc:'Roasted vegetables, cashew béchamel', ing:'Lentil ragout, cashew cream, roasted veg', tags:['veg'] },
+  { id:'burger', cat:'Burgers & sandwiches', name:'Ember Smash Burger', price:16, img:'img/burger.jpg', desc:'Double patty, aged cheddar, house sauce', ing:'Beef patty x2, cheddar, house sauce, brioche', tags:['hot'] },
+  { id:'csandwich', cat:'Burgers & sandwiches', name:'Chicken Fillet Sandwich', price:13, img:'img/chicken-sandwich.jpg', desc:'Slaw, pickles, honey mustard', ing:'Chicken breast, slaw, pickles, honey mustard', tags:[] },
+  { id:'alfredo', cat:'Pasta', name:'Fettuccine Alfredo', price:17, img:'img/alfredo.jpg', desc:'Parmesan cream, cracked black pepper', ing:'Fettuccine, parmesan, cream, pepper', tags:[] },
+  { id:'carbonara', cat:'Pasta', name:'Spaghetti Carbonara', price:16, img:'img/carbonara.jpg', desc:'Guanciale, pecorino, egg yolk', ing:'Spaghetti, guanciale, pecorino, egg', tags:['hot'] },
+  { id:'crumble', cat:'Desserts', name:'Apple & Blackberry Crumble', price:9, img:'img/crumble.jpg', desc:'Warm crumble, vanilla bean ice cream', ing:'Apple, blackberry, oat crumble, vanilla ice cream', tags:[] },
+  { id:'choccake', cat:'Desserts', name:'Vegan Chocolate Cake', price:9, img:'img/choc-cake.jpg', desc:'Dark cocoa, sea salt, olive oil', ing:'Cocoa, oat milk, olive oil, sea salt', tags:['veg'] },
+  { id:'mojito', cat:'Bar', name:'Mojito', price:9, img:'img/mojito.jpg', desc:'White rum, mint, lime, soda', ing:'White rum, mint, lime, soda', tags:['hot'] },
+  { id:'martini', cat:'Bar', name:'Espresso Martini', price:11, img:'img/espresso-martini.jpg', desc:'Vodka, coffee liqueur, fresh espresso', ing:'Vodka, coffee liqueur, espresso', tags:[] },
+  { id:'spritz', cat:'Bar', name:'Aperol Spritz', price:10, img:'img/aperol.jpg', desc:'Aperol, prosecco, soda, orange', ing:'Aperol, prosecco, soda, orange', tags:[] }
+];
+
+/* ===== Render menu ===== */
+function renderMenu() {
+  var el = document.getElementById('sec-menu');
+  var cats = ['Small plates','Mains','Burgers & sandwiches','Pasta','Desserts','Bar'];
+  var html = '';
+  cats.forEach(function(c){
+    var items = PRODUCTS.filter(function(p){ return p.cat === c; });
+    if (!items.length) return;
+    html += '<div class="cat-title">' + c + '</div><div class="grid">';
+    items.forEach(function(p){
+      var flags = '';
+      p.tags.forEach(function(t){
+        if (t === 'hot') flags += '<span class="flag hot">Popular</span>';
+        if (t === 'chef') flags += '<span class="flag chef">Chef\'s pick</span>';
+        if (t === 'veg') flags += '<span class="flag veg">Vegan</span>';
+        if (t === 'new') flags += '<span class="flag hot">New</span>';
+      });
+      html += '<div class="card" onclick="openProduct(\'' + p.id + '\')">' +
+        '<div class="media"><img src="' + p.img + '" alt="' + p.name + '" loading="lazy" onerror="this.style.display=\'none\'"><div class="flags">' + flags + '</div></div>' +
+        '<div class="body"><div class="cat">' + p.cat + '</div><h3>' + p.name + '</h3><div class="desc">' + p.desc + '</div>' +
+        '<div class="bottom"><span class="price">$' + p.price + '</span></div></div></div>';
+    });
+    html += '</div>';
+  });
+  el.innerHTML = html;
+}
+
+/* ===== Tabs ===== */
+function showTab(name) {
+  document.querySelectorAll('.tab').forEach(function(t){ t.classList.toggle('active', t.dataset.tab === name); });
+  ['menu','surprise','info'].forEach(function(s){
+    document.getElementById('sec-' + s).classList.toggle('active', s === name);
+  });
+}
+
+/* ===== Product sheet ===== */
+var currentId = null, currentPrice = null;
+function openProduct(id) {
+  var p = PRODUCTS.find(function(x){ return x.id === id; });
+  if (!p) return;
+  currentId = id; currentPrice = p.price;
+  document.getElementById('pImg').src = p.img;
+  document.getElementById('pTitle').textContent = p.name;
+  document.getElementById('pSub').textContent = p.desc;
+  document.getElementById('pIng').innerHTML = '<b>Made with:</b> ' + p.ing;
+  document.getElementById('pQty').value = 1;
+  updateTotal();
+  openSheet('prodSheet');
+}
+function adjQty(d) {
+  var i = document.getElementById('pQty');
+  var v = parseInt(i.value || '1', 10) + d;
+  if (v < 1) v = 1; if (v > 99) v = 99;
+  i.value = v; updateTotal();
+}
+function setQty(v) {
+  v = parseInt(v, 10);
+  if (isNaN(v) || v < 1) v = 1; if (v > 99) v = 99;
+  document.getElementById('pQty').value = v; updateTotal();
+}
+function updateTotal() {
+  var q = parseInt(document.getElementById('pQty').value, 10);
+  document.getElementById('pTotal').textContent = '$' + (currentPrice * q);
+}
+
+/* ===== Sheets ===== */
+function openSheet(id) {
+  document.getElementById('overlay').classList.remove('hidden');
+  var s = document.getElementById(id);
+  s.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+function closeSheets() {
+  document.getElementById('overlay').classList.add('hidden');
+  ['prodSheet','cartSheet'].forEach(function(id){
+    document.getElementById(id).classList.add('hidden');
+  });
+  document.body.style.overflow = '';
+}
+
+/* ===== Cart ===== */
+var cart = {};
+var cartPrice = {}; // id -> special (surprise) unit price, if any
+function addToCart(id, price) {
+  cart[id] = (cart[id] || 0) + 1;
+  var p = PRODUCTS.find(function(x){ return x.id === id; });
+  toast('Added: ' + p.name);
+  updateCartBar();
+}
+function addFromSheet() {
+  var q = parseInt(document.getElementById('pQty').value, 10);
+  cart[currentId] = (cart[currentId] || 0) + q;
+  var p = PRODUCTS.find(function(x){ return x.id === currentId; });
+  toast('Added: ' + p.name + ' x' + q);
+  closeSheets();
+  updateCartBar();
+}
+function unitPrice(id) {
+  return cartPrice[id] !== undefined ? cartPrice[id] : (PRODUCTS.find(function(x){ return x.id === id; }) || {}).price;
+}
+function cartTotal() {
+  var sum = 0;
+  for (var id in cart) {
+    var p = PRODUCTS.find(function(x){ return x.id === id; });
+    if (p) sum += unitPrice(id) * cart[id];
+  }
+  return sum;
+}
+function cartCount() {
+  var n = 0;
+  for (var id in cart) n += cart[id];
+  return n;
+}
+function updateCartBar() {
+  var n = cartCount(), sum = cartTotal();
+  document.getElementById('cartCount').textContent = n + (n === 1 ? ' item' : ' items');
+  document.getElementById('cartSum').textContent = '$' + sum;
+  document.getElementById('cartbar').classList.toggle('show', n > 0);
+}
+function openCart() {
+  var list = document.getElementById('cartList');
+  if (!cartCount()) {
+    list.innerHTML = '<div class="cart-empty"><div class="big">🍽</div><div>Your order is empty.</div><div style="font-size:12px;margin-top:4px">Browse the menu and add something tasty.</div></div>';
+  } else {
+    var html = '';
+    for (var id in cart) {
+      var p = PRODUCTS.find(function(x){ return x.id === id; });
+      if (!p) continue;
+      var up = unitPrice(id);
+      html += '<div class="cart-item"><div class="ci-name"><b>' + p.name + '</b><span>$' + up + ' each' + (cartPrice[id] !== undefined ? ' · surprise' : '') + '</span></div>' +
+        '<div class="qty"><button onclick="cartAdj(\'' + id + '\',-1)">−</button><input type="number" value="' + cart[id] + '" min="1" onchange="cartSet(\'' + id + '\',this.value)"><button onclick="cartAdj(\'' + id + '\',1)">+</button></div>' +
+        '<div class="ci-price">$' + (up * cart[id]) + '</div></div>';
+    }
+    list.innerHTML = html;
+  }
+  document.getElementById('cartTotal').textContent = '$' + cartTotal();
+  openSheet('cartSheet');
+}
+function cartAdj(id, d) {
+  cart[id] = (cart[id] || 0) + d;
+  if (cart[id] <= 0) { delete cart[id]; delete cartPrice[id]; }
+  updateCartBar(); openCart();
+}
+function cartSet(id, v) {
+  v = parseInt(v, 10);
+  if (isNaN(v) || v < 1) v = 1;
+  cart[id] = v;
+  updateCartBar(); openCart();
+}
+
+/* ===== Order ===== */
+function submitOrder() {
+  var name = document.getElementById('fName').value.trim();
+  var note = document.getElementById('fNote').value.trim();
+  var lines = [];
+  var sum = 0;
+  for (var id in cart) {
+    var p = PRODUCTS.find(function(x){ return x.id === id; });
+    if (!p) continue;
+    var up = unitPrice(id);
+    lines.push('• ' + p.name + ' x' + cart[id] + (cartPrice[id] !== undefined ? ' (surprise)' : '') + ' - $' + (up * cart[id]));
+    sum += up * cart[id];
+  }
+  var txt = '🍽 NEW ORDER - EMBER\n';
+  if (name) txt += '👤 ' + name + '\n';
+  txt += '📦 ' + lines.join('\n') + '\n';
+  txt += '💰 Total: $' + sum + '\n';
+  if (note) txt += '💬 ' + note;
+  var url = 'https://t.me/openyanixvxclawbot?text=' + encodeURIComponent(txt);
+  if (tg && tg.openTelegramLink) tg.openTelegramLink(url);
+  else window.open(url, '_blank');
+}
+function bookTable() {
+  var txt = '🌿 TABLE REQUEST - EMBER\n👤 ' + (tg && tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user.first_name || '' : '') + '\nGuests: 2\nTime: tonight\nPlease confirm availability.';
+  var url = 'https://t.me/openyanixvxclawbot?text=' + encodeURIComponent(txt);
+  if (tg && tg.openTelegramLink) tg.openTelegramLink(url);
+  else window.open(url, '_blank');
+}
+
+/* ===== Surprise Plate ===== */
+var budget = 15, surprisePick = null, surprisePrice = null;
+function pickBudget(b) {
+  budget = b;
+  document.querySelectorAll('.budget-chip').forEach(function(c){
+    c.classList.toggle('sel', parseInt(c.dataset.b, 10) === b);
+  });
+}
+function surpriseCandidates() {
+  return PRODUCTS.filter(function(p){ return p.price <= budget; });
+}
+function spinRoulette() {
+  var cands = surpriseCandidates();
+  if (!cands.length) { toast('No dishes in this budget'); return; }
+  var box = document.getElementById('roulette');
+  var zone = document.getElementById('spinZone');
+  var ticker = document.getElementById('ticker');
+  var btn = document.getElementById('spinBtn');
+  zone.classList.add('spinning');
+  btn.disabled = true; btn.style.opacity = .5;
+  box.classList.remove('done');
+  var frames = [];
+  for (var i = 0; i < 18; i++) frames.push(cands[Math.floor(Math.random() * cands.length)]);
+  var final = cands[Math.floor(Math.random() * cands.length)];
+  frames.push(final, final);
+  var t = 0, step = 40;
+  var intv = setInterval(function(){
+    var p = frames[Math.min(t, frames.length - 1)];
+    ticker.textContent = p.name + '  •  $' + p.price;
+    t++;
+    if (t >= frames.length) {
+      clearInterval(intv);
+      zone.classList.remove('spinning');
+      btn.disabled = false; btn.style.opacity = 1;
+      setTimeout(function(){ showSurprise(final); }, 250);
+    }
+  }, step);
+}
+function showSurprise(p) {
+  surprisePick = p;
+  surprisePrice = Math.round(p.price * 0.8);
+  document.getElementById('rImg').src = p.img;
+  document.getElementById('rName').textContent = p.name;
+  document.getElementById('rDesc').textContent = p.desc;
+  document.getElementById('rOld').textContent = '$' + p.price;
+  document.getElementById('rNew').textContent = '$' + surprisePrice;
+  document.getElementById('roulette').classList.add('done');
+  burstConfetti();
+}
+function addSurprise() {
+  if (!surprisePick) return;
+  cart[surprisePick.id] = (cart[surprisePick.id] || 0) + 1;
+  cartPrice[surprisePick.id] = surprisePrice;
+  toast('Surprise added: ' + surprisePick.name + ' - 20% off');
+  updateCartBar();
+}
+function spinAgain() {
+  document.getElementById('roulette').classList.remove('done');
+  spinRoulette();
+}
+function burstConfetti() {
+  var box = document.getElementById('confetti');
+  box.innerHTML = '';
+  var colors = ['#e2571c', '#f5a623', '#2e9e5b', '#4a7dff', '#e4577a'];
+  for (var i = 0; i < 26; i++) {
+    var el = document.createElement('i');
+    el.style.left = (8 + Math.random() * 84) + '%';
+    el.style.background = colors[i % colors.length];
+    el.style.animationDelay = (Math.random() * 0.35) + 's';
+    box.appendChild(el);
+  }
+  setTimeout(function(){ box.innerHTML = ''; }, 2000);
+}
+
+/* ===== Toast ===== */
+function toast(msg) {
+  var box = document.getElementById('toasts');
+  var el = document.createElement('div');
+  el.className = 'toast';
+  el.innerHTML = '<span class="ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M4 12.5l5 5L20 6.5"/></svg></span>' + msg;
+  box.appendChild(el);
+  setTimeout(function(){ el.classList.add('out'); }, 2000);
+  setTimeout(function(){ el.remove(); }, 2300);
+}
+
+/* ===== Init ===== */
+function highlightToday() {
+  var d = new Date().getDay(); // 0=Sun ... 6=Sat
+  var target = (d >= 1 && d <= 4) ? 1 : (d === 5 || d === 6) ? 5 : 0;
+  document.querySelectorAll('.hours-row').forEach(function(r){
+    if (parseInt(r.dataset.day, 10) === target) r.classList.add('today');
+  });
+}
+renderMenu();
+updateCartBar();
+initTheme();
+highlightToday();
+</script>
+</body>
+</html>
