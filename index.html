@@ -7,36 +7,36 @@
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 :root {
-  --bg: #f4f5f7;
-  --bg2: #eceef1;
+  --bg: #f6f7f4;
+  --bg2: #edefe8;
   --surface: #ffffff;
-  --text: #16181d;
-  --text2: #5c6470;
-  --text3: #8a929e;
-  --line: #e3e5e9;
-  --accent: #e2571c;
-  --accent-strong: #c94a12;
-  --accent-soft: #fdeee3;
-  --amber: #f5a623;
+  --text: #1a2119;
+  --text2: #56645a;
+  --text3: #8b958c;
+  --line: #e2e6dc;
+  --accent: #1d6b45;
+  --accent-strong: #14532d;
+  --accent-soft: #e5f2ea;
+  --amber: #b45309;
   --ok: #2e9e5b;
   --danger: #dc2626;
   --radius: 16px;
   --radius-sm: 10px;
-  --shadow: 0 1px 2px rgba(20,20,20,.05), 0 4px 16px rgba(20,20,20,.06);
-  --shadow-lg: 0 8px 32px rgba(20,20,20,.12);
+  --shadow: 0 1px 2px rgba(20,30,22,.06), 0 4px 16px rgba(20,30,22,.07);
+  --shadow-lg: 0 8px 32px rgba(20,30,22,.14);
 }
 body.dark {
-  --bg: #141416;
-  --bg2: #1c1d20;
-  --surface: #232428;
-  --text: #f4f4f5;
-  --text2: #a9adb6;
-  --text3: #767b85;
-  --line: #33353a;
-  --accent: #ff6b33;
-  --accent-strong: #ff8355;
-  --accent-soft: #3a241a;
-  --amber: #ffb340;
+  --bg: #121411;
+  --bg2: #1a1d18;
+  --surface: #22251f;
+  --text: #eef2eb;
+  --text2: #a4afa2;
+  --text3: #6e786d;
+  --line: #32382e;
+  --accent: #34d399;
+  --accent-strong: #6ee7b7;
+  --accent-soft: #16291d;
+  --amber: #fbbf24;
   --ok: #3dd68c;
   --danger: #f87171;
   --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 16px rgba(0,0,0,.4);
@@ -59,7 +59,7 @@ body { font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',Rob
 /* ===== Header ===== */
 .header { padding:20px 20px 14px; }
 .brand { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
-.brand .logo { width:40px; height:40px; border-radius:12px; background:linear-gradient(135deg,#ff6b33,#e2571c); display:flex; align-items:center; justify-content:center; box-shadow:0 3px 10px rgba(226,87,28,.35); }
+.brand .logo { width:40px; height:40px; border-radius:12px; background:linear-gradient(135deg,#2ba977,#176b45); display:flex; align-items:center; justify-content:center; box-shadow:0 3px 10px rgba(29,107,69,.35); }
 .brand .logo svg { width:22px; height:22px; }
 .brand .name { font-size:18px; font-weight:800; letter-spacing:-.02em; }
 .brand .name span { color:var(--accent); }
@@ -104,9 +104,10 @@ body.dark .tab.active { color:var(--accent); }
 .flag { font-size:10px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; padding:4px 8px; border-radius:8px; }
 .flag.hot { background:#16181d; color:#ffb340; }
 body.dark .flag.hot { background:#000; }
-.flag.chef { background:#e2571c; color:#fff; }
-body.dark .flag.chef { background:var(--accent); }
+.flag.chef { background:#1d6b45; color:#fff; }
+body.dark .flag.chef { background:var(--accent); color:#06281a; }
 .flag.veg { background:#2e9e5b; color:#fff; }
+body.dark .flag.veg { background:#3dd68c; color:#06281a; }
 .card .body { padding:12px; display:flex; flex-direction:column; flex:1; }
 .card .cat { font-size:10.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--accent); margin-bottom:4px; }
 .card h3 { font-size:13.5px; font-weight:700; letter-spacing:-.01em; line-height:1.3; margin-bottom:2px; }
@@ -140,9 +141,9 @@ body.dark .sheet .total-line .t { color:var(--accent); }
 .sheet .total-line .v { font-size:18px; font-weight:800; }
 
 /* ===== Buttons ===== */
-.btn-primary { width:100%; border:0; border-radius:14px; padding:15px; font-size:15px; font-weight:800; color:#fff; background:var(--accent); cursor:pointer; box-shadow:0 4px 14px rgba(226,87,28,.3); transition:transform .12s ease, background .15s; }
+.btn-primary { width:100%; border:0; border-radius:14px; padding:15px; font-size:15px; font-weight:800; color:#fff; background:var(--accent); cursor:pointer; box-shadow:0 4px 14px rgba(29,107,69,.28); transition:transform .12s ease, background .15s; }
 .btn-primary:active { transform:scale(.98); background:var(--accent-strong); }
-body.dark .btn-primary { background:var(--accent); color:#1a1a1a; }
+body.dark .btn-primary { background:var(--accent); color:#06281a; }
 body.dark .btn-primary:active { background:var(--accent-strong); }
 .btn-ghost { width:100%; border:1px solid var(--line); border-radius:14px; padding:14px; font-size:14px; font-weight:700; color:var(--text2); background:var(--surface); cursor:pointer; }
 .btn-ghost:active { background:var(--bg2); }
@@ -175,7 +176,7 @@ body.dark .ticker { color:var(--accent); }
 .result .r-img { width:100%; height:150px; object-fit:cover; display:block; }
 .result .r-body { padding:14px 16px 16px; }
 .result .r-flag { display:inline-block; font-size:10px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; background:var(--accent); color:#fff; border-radius:8px; padding:4px 9px; margin-bottom:8px; }
-body.dark .result .r-flag { color:#1a1a1a; }
+body.dark .result .r-flag { color:#06281a; }
 .result h3 { font-size:17px; font-weight:800; letter-spacing:-.01em; margin-bottom:3px; }
 .result .r-desc { font-size:12.5px; color:var(--text2); margin-bottom:10px; }
 .result .r-price { display:flex; align-items:baseline; gap:8px; margin-bottom:12px; }
@@ -187,6 +188,24 @@ body.dark .result .r-price .new { color:var(--accent); }
 .confetti { position:absolute; inset:0; pointer-events:none; overflow:hidden; }
 .confetti i { position:absolute; top:-12px; width:8px; height:14px; border-radius:2px; opacity:0; animation:fall 1.4s ease forwards; }
 @keyframes fall { 0% { opacity:0; transform:translateY(-10px) rotate(0);} 10% { opacity:1;} 100% { opacity:0; transform:translateY(220px) rotate(340deg);} }
+
+/* ===== Lucky Cup ===== */
+.stage { position:relative; width:332px; height:258px; margin:0 auto; }
+.cup { position:absolute; left:0; top:0; width:96px; height:112px; border:0; padding:0; background:transparent; cursor:pointer; transform-origin:center bottom; transition:transform .34s cubic-bezier(.3,.8,.3,1); }
+.cup svg { width:100%; height:100%; display:block; filter:drop-shadow(0 6px 10px rgba(0,0,0,.16)); }
+.cup.tapped { animation:cup-pop .35s ease; }
+@keyframes cup-pop { 0% { transform:scale(1);} 35% { transform:scale(1.12) translateY(-6px);} 100% { transform:scale(1);} }
+.cup .cup-empty { display:none; }
+.cup.reveal-empty svg .cup-body { opacity:.45; }
+.cup.reveal-empty .cup-empty { display:block; }
+.cup.shuffling { pointer-events:none; }
+.code-card { background:var(--surface); border:1.5px solid var(--accent); border-radius:20px; padding:22px 20px; text-align:center; box-shadow:var(--shadow-lg); animation:fade .3s ease; }
+.code-flag { display:inline-block; font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:var(--accent-strong); background:var(--accent-soft); border-radius:999px; padding:5px 12px; margin-bottom:12px; }
+body.dark .code-flag { color:var(--accent); }
+.code-value { font-size:30px; font-weight:800; letter-spacing:.06em; font-variant-numeric:tabular-nums; margin-bottom:6px; color:var(--text); }
+.code-hint { font-size:12.5px; color:var(--text2); margin-bottom:14px; }
+.countdown { display:inline-block; font-size:14px; font-weight:800; font-variant-numeric:tabular-nums; color:#fff; background:var(--accent); border-radius:999px; padding:8px 16px; }
+body.dark .countdown { color:#06281a; }
 
 /* ===== Info ===== */
 .info-card { background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:16px; box-shadow:var(--shadow); margin-bottom:12px; }
@@ -284,6 +303,10 @@ body.dark .hours-row.today .d, body.dark .hours-row.today .h { color:var(--accen
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z"/><path d="M12 7v10M7 12h10"/></svg>
     Surprise
   </div>
+  <div class="tab" data-tab="lucky" onclick="showTab('lucky')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 9h-1.5a3.5 3.5 0 0 1 0-7H17"/><path d="M7 9h1.5a3.5 3.5 0 0 0 0-7H7"/><path d="M3 9h18v3a7 7 0 0 1-7 7h-4a7 7 0 0 1-7-7z"/><path d="M12 19v3"/></svg>
+    Lucky
+  </div>
   <div class="tab" data-tab="info" onclick="showTab('info')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 21s-7-5.3-7-11a7 7 0 0 1 14 0c0 5.7-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
     Visit
@@ -331,6 +354,27 @@ body.dark .hours-row.today .d, body.dark .hours-row.today .h { color:var(--accen
       <div class="confetti" id="confetti"></div>
     </div>
     <p class="note" style="margin-top:14px">Surprise price applies to your order. Tell the server it's a surprise when you arrive.</p>
+  </div>
+</div>
+
+<!-- ================= LUCKY CUP ================= -->
+<div class="section" id="sec-lucky">
+  <div class="surprise">
+    <div class="intro">
+      <h2>Lucky Cup</h2>
+      <p>Six cups, one hidden coffee code. Pick the right cup and grab 50% off any coffee, valid for 24 hours.</p>
+    </div>
+    <div class="code-card hidden" id="luckyActive">
+      <span class="code-flag">Your coffee code</span>
+      <div class="code-value" id="luckyCode"></div>
+      <p class="code-hint">Show this to your barista. 50% off any coffee.</p>
+      <div class="countdown" id="luckyTimer"></div>
+    </div>
+    <div id="luckyGame">
+      <div class="stage" id="cupStage"></div>
+      <button class="btn-ghost" id="shuffleBtn" onclick="shuffleCups()" style="margin-top:16px">Shuffle</button>
+      <p class="note" style="margin-top:12px" id="luckyNote">Tap a cup after the shuffle. One code every 24 hours.</p>
+    </div>
   </div>
 </div>
 
@@ -467,7 +511,8 @@ var PRODUCTS = [
   { id:'choccake', cat:'Desserts', name:'Vegan Chocolate Cake', price:9, img:'img/choc-cake.jpg', desc:'Dark cocoa, sea salt, olive oil', ing:'Cocoa, oat milk, olive oil, sea salt', tags:['veg'] },
   { id:'mojito', cat:'Bar', name:'Mojito', price:9, img:'img/mojito.jpg', desc:'White rum, mint, lime, soda', ing:'White rum, mint, lime, soda', tags:['hot'] },
   { id:'martini', cat:'Bar', name:'Espresso Martini', price:11, img:'img/espresso-martini.jpg', desc:'Vodka, coffee liqueur, fresh espresso', ing:'Vodka, coffee liqueur, espresso', tags:[] },
-  { id:'spritz', cat:'Bar', name:'Aperol Spritz', price:10, img:'img/aperol.jpg', desc:'Aperol, prosecco, soda, orange', ing:'Aperol, prosecco, soda, orange', tags:[] }
+  { id:'spritz', cat:'Bar', name:'Aperol Spritz', price:10, img:'img/aperol.jpg', desc:'Aperol, prosecco, soda, orange', ing:'Aperol, prosecco, soda, orange', tags:[] },
+  { id:'coffee', cat:'Bar', name:'House Coffee', price:4, img:'img/coffee.jpg', desc:'House blend, roasted daily', ing:'Coffee beans, milk (oat available)', tags:['new'] }
 ];
 
 /* ===== Render menu ===== */
@@ -500,9 +545,10 @@ function renderMenu() {
 /* ===== Tabs ===== */
 function showTab(name) {
   document.querySelectorAll('.tab').forEach(function(t){ t.classList.toggle('active', t.dataset.tab === name); });
-  ['menu','surprise','info'].forEach(function(s){
+  ['menu','surprise','lucky','info'].forEach(function(s){
     document.getElementById('sec-' + s).classList.toggle('active', s === name);
   });
+  if (name === 'lucky') checkLuckyState();
 }
 
 /* ===== Product sheet ===== */
@@ -532,7 +578,8 @@ function setQty(v) {
 }
 function updateTotal() {
   var q = parseInt(document.getElementById('pQty').value, 10);
-  document.getElementById('pTotal').textContent = '$' + (currentPrice * q);
+  var price = (currentId === 'coffee' && luckyActive()) ? 2 : currentPrice;
+  document.getElementById('pTotal').textContent = '$' + (price * q);
 }
 
 /* ===== Sheets ===== */
@@ -563,7 +610,12 @@ function addFromSheet() {
   var q = parseInt(document.getElementById('pQty').value, 10);
   cart[currentId] = (cart[currentId] || 0) + q;
   var p = PRODUCTS.find(function(x){ return x.id === currentId; });
-  toast('Added: ' + p.name + ' x' + q);
+  if (currentId === 'coffee' && luckyActive()) {
+    cartPrice[currentId] = 2;
+    toast('Lucky code applied - coffee 50% off');
+  } else {
+    toast('Added: ' + p.name + ' x' + q);
+  }
   closeSheets();
   updateCartBar();
 }
@@ -599,7 +651,8 @@ function openCart() {
       var p = PRODUCTS.find(function(x){ return x.id === id; });
       if (!p) continue;
       var up = unitPrice(id);
-      html += '<div class="cart-item"><div class="ci-name"><b>' + p.name + '</b><span>$' + up + ' each' + (cartPrice[id] !== undefined ? ' · surprise' : '') + '</span></div>' +
+      var tag = cartPrice[id] !== undefined ? (id === 'coffee' && cartPrice[id] === 2 ? ' · lucky 50%' : ' · surprise') : '';
+      html += '<div class="cart-item"><div class="ci-name"><b>' + p.name + '</b><span>$' + up + ' each' + tag + '</span></div>' +
         '<div class="qty"><button onclick="cartAdj(\'' + id + '\',-1)">−</button><input type="number" value="' + cart[id] + '" min="1" onchange="cartSet(\'' + id + '\',this.value)"><button onclick="cartAdj(\'' + id + '\',1)">+</button></div>' +
         '<div class="ci-price">$' + (up * cart[id]) + '</div></div>';
     }
@@ -630,7 +683,8 @@ function submitOrder() {
     var p = PRODUCTS.find(function(x){ return x.id === id; });
     if (!p) continue;
     var up = unitPrice(id);
-    lines.push('• ' + p.name + ' x' + cart[id] + (cartPrice[id] !== undefined ? ' (surprise)' : '') + ' - $' + (up * cart[id]));
+    var tag = cartPrice[id] !== undefined ? (id === 'coffee' && cartPrice[id] === 2 ? ' (lucky 50%)' : ' (surprise)') : '';
+    lines.push('• ' + p.name + ' x' + cart[id] + tag + ' - $' + (up * cart[id]));
     sum += up * cart[id];
   }
   var txt = '🍽 NEW ORDER - EMBER\n';
@@ -723,6 +777,153 @@ function burstConfetti() {
   setTimeout(function(){ box.innerHTML = ''; }, 2000);
 }
 
+/* ===== Lucky Cup ===== */
+var cupsBySlot = [], winnerSlot = 0, gameActive = false, luckyTimerInt = null;
+var CUP_W = 96, CUP_H = 112, CUP_GAP = 14, CUP_PAD = 8;
+function cupPos(slot) {
+  var col = slot % 3, row = Math.floor(slot / 3);
+  return { x: CUP_PAD + col * (CUP_W + CUP_GAP), y: CUP_PAD + row * (CUP_H + CUP_GAP) };
+}
+function cupSVG() {
+  return '<svg viewBox="0 0 96 112">' +
+    '<rect x="26" y="6" width="44" height="10" rx="4" fill="var(--text3)"/>' +
+    '<rect x="18" y="14" width="60" height="7" rx="3.5" fill="var(--line)"/>' +
+    '<path class="cup-body" d="M22 21 L74 21 L66 96 Q65 103 58 103 L38 103 Q31 103 30 96 Z" fill="var(--surface)" stroke="var(--line)" stroke-width="2"/>' +
+    '<rect x="41" y="30" width="14" height="44" rx="7" fill="var(--accent-soft)"/>' +
+    '<path d="M48 36 c3 7 -7 9 -7 16 0 6 4 9 7 9" stroke="var(--accent)" stroke-width="2.6" fill="none" stroke-linecap="round"/>' +
+    '<g class="cup-empty"><path d="M40 54 l16 16 M56 54 L40 70" stroke="var(--danger)" stroke-width="3.5" stroke-linecap="round"/></g>' +
+    '</svg>';
+}
+function renderCups() {
+  var stage = document.getElementById('cupStage');
+  stage.innerHTML = '';
+  cupsBySlot = [];
+  for (var i = 0; i < 6; i++) {
+    var b = document.createElement('button');
+    b.className = 'cup';
+    b.innerHTML = cupSVG();
+    b.onclick = function(){ pickCup(this); };
+    stage.appendChild(b);
+    cupsBySlot.push(b);
+  }
+  resetCupPositions();
+}
+function resetCupPositions() {
+  cupsBySlot.forEach(function(cup, slot){
+    var p = cupPos(slot);
+    cup.style.transform = 'translate(' + p.x + 'px,' + p.y + 'px)';
+    cup.classList.remove('tapped', 'reveal-empty', 'shuffling');
+    cup.style.transition = 'none';
+  });
+  // force reflow then restore transition
+  void document.getElementById('cupStage').offsetHeight;
+  cupsBySlot.forEach(function(cup){
+    cup.style.transition = '';
+  });
+}
+function sleep(ms) { return new Promise(function(res){ setTimeout(res, ms); }); }
+async function shuffleCups() {
+  if (!gameActive || document.getElementById('shuffleBtn').disabled) return;
+  var btn = document.getElementById('shuffleBtn');
+  btn.disabled = true;
+  gameActive = false;
+  cupsBySlot.forEach(function(c){ c.classList.add('shuffling'); });
+  // re-hide the prize under a fresh random cup
+  winnerSlot = Math.floor(Math.random() * 6);
+  for (var s = 0; s < 6; s++) {
+    var i = Math.floor(Math.random() * 6), j = Math.floor(Math.random() * 6);
+    if (i !== j) {
+      var a = cupsBySlot[i], b = cupsBySlot[j];
+      cupsBySlot[i] = b; cupsBySlot[j] = a;
+      var pa = cupPos(i), pb = cupPos(j);
+      b.style.transform = 'translate(' + pa.x + 'px,' + pa.y + 'px)';
+      a.style.transform = 'translate(' + pb.x + 'px,' + pb.y + 'px)';
+    }
+    await sleep(340);
+  }
+  cupsBySlot.forEach(function(c){ c.classList.remove('shuffling'); });
+  gameActive = true;
+  btn.disabled = false;
+  document.getElementById('luckyNote') && (document.getElementById('luckyNote').textContent = 'Tap a cup. The prize hides under one of them.');
+}
+function pickCup(el) {
+  if (!gameActive) return;
+  gameActive = false;
+  el.classList.add('tapped');
+  var slot = cupsBySlot.indexOf(el);
+  if (slot === winnerSlot) {
+    setTimeout(function(){ winLucky(); }, 420);
+  } else {
+    el.classList.add('reveal-empty');
+    toast('Empty cup. Shuffle and try again.');
+    setTimeout(function(){
+      el.classList.remove('tapped', 'reveal-empty');
+      winnerSlot = Math.floor(Math.random() * 6);
+      gameActive = true;
+    }, 900);
+  }
+}
+function genCode() {
+  var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  var out = '';
+  for (var i = 0; i < 5; i++) out += chars[Math.floor(Math.random() * chars.length)];
+  return 'EMBER-' + out;
+}
+function winLucky() {
+  var code = genCode();
+  var exp = Date.now() + 24 * 3600 * 1000;
+  try { localStorage.setItem('ember_lucky', JSON.stringify({ code: code, exp: exp })); } catch(e){}
+  burstConfetti();
+  checkLuckyState();
+}
+function luckyActive() {
+  try {
+    var d = JSON.parse(localStorage.getItem('ember_lucky') || 'null');
+    if (!d || !d.exp) return null;
+    if (d.exp > Date.now()) return d;
+    localStorage.removeItem('ember_lucky');
+    return null;
+  } catch(e){ return null; }
+}
+function checkLuckyState() {
+  var d = luckyActive();
+  var active = document.getElementById('luckyActive');
+  var game = document.getElementById('luckyGame');
+  if (d) {
+    document.getElementById('luckyCode').textContent = d.code;
+    active.classList.remove('hidden');
+    game.classList.add('hidden');
+    startLuckyTimer();
+  } else {
+    active.classList.add('hidden');
+    game.classList.remove('hidden');
+    stopLuckyTimer();
+    if (!gameActive) { gameActive = true; }
+  }
+}
+function startLuckyTimer() {
+  stopLuckyTimer();
+  var el = document.getElementById('luckyTimer');
+  function tick() {
+    var d = luckyActive();
+    if (!d) {
+      el.textContent = 'Expired';
+      stopLuckyTimer();
+      checkLuckyState();
+      toast('Code expired. Play again!');
+      return;
+    }
+    var left = Math.max(0, d.exp - Date.now());
+    var h = Math.floor(left / 3600000), m = Math.floor(left % 3600000 / 60000), s = Math.floor(left % 60000 / 1000);
+    el.textContent = (h < 10 ? '0' : '') + h + ':' + (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s + ' left';
+  }
+  tick();
+  luckyTimerInt = setInterval(tick, 1000);
+}
+function stopLuckyTimer() {
+  if (luckyTimerInt) { clearInterval(luckyTimerInt); luckyTimerInt = null; }
+}
+
 /* ===== Toast ===== */
 function toast(msg) {
   var box = document.getElementById('toasts');
@@ -746,6 +947,8 @@ renderMenu();
 updateCartBar();
 initTheme();
 highlightToday();
+renderCups();
+gameActive = true;
 </script>
 </body>
 </html>
