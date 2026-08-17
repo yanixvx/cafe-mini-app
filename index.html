@@ -423,7 +423,7 @@ body.dark .hours-row.today .d, body.dark .hours-row.today .h { color:var(--accen
 
 <div class="sheet hidden" id="prodSheet">
   <div class="handle"></div>
-  <div class="hero-img"><img id="pImg" src="" alt="" onerror="this.style.display='none'"></div>
+  <div class="hero-img"><img id="pImg" src="" alt=""></div>
   <div class="grip">
     <div class="title" id="pTitle"></div>
     <div class="sub" id="pSub"></div>
@@ -557,7 +557,10 @@ function openProduct(id) {
   var p = PRODUCTS.find(function(x){ return x.id === id; });
   if (!p) return;
   currentId = id; currentPrice = p.price;
-  document.getElementById('pImg').src = p.img;
+  var img = document.getElementById('pImg');
+  img.onload = function(){ img.style.display = ''; };
+  img.onerror = function(){ img.style.display = 'none'; };
+  img.src = p.img;
   document.getElementById('pTitle').textContent = p.name;
   document.getElementById('pSub').textContent = p.desc;
   document.getElementById('pIng').innerHTML = '<b>Made with:</b> ' + p.ing;
